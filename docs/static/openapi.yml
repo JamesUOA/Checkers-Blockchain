@@ -20179,6 +20179,11 @@ definitions:
       and
 
       freezing clients
+  jamesuoa.checkers.checkers.MsgCreateGameResponse:
+    type: object
+    properties:
+      idValue:
+        type: string
   jamesuoa.checkers.checkers.NextGame:
     type: object
     properties:
