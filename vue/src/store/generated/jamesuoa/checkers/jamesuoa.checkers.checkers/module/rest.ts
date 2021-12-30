@@ -13,6 +13,19 @@ export interface CheckersMsgCreateGameResponse {
   idValue?: string;
 }
 
+export interface CheckersMsgPlayMoveResponse {
+  idValue?: string;
+
+  /** @format int64 */
+  capturedX?: string;
+
+  /** @format int64 */
+  capturedY?: string;
+  winner?: string;
+}
+
+export type CheckersMsgRejectGameResponse = object;
+
 export interface CheckersNextGame {
   creator?: string;
 
