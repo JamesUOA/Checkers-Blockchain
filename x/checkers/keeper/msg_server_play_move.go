@@ -53,10 +53,18 @@ func (k msgServer) PlayMove(goCtx context.Context, msg *types.MsgPlayMove) (*typ
 		return nil, sdkerrors.Wrapf(moveErr, types.ErrWrongMove.Error())
 	}
 
+	nextGame, found := k.Keeper.GetNextGame(ctx)
+	if !found {
+		panic("NextGame not found")
+	}
+	k.Keeper.SendToFifoTail(ctx, &storedGame, &nextGame)
+
+	storedGame.MoveCount++
+	storedGame.Deadline = types.FormatDeadline(types.GetNextDeadline(ctx))
 	storedGame.Game = game.String()
 	storedGame.Turn = game.Turn.Color
-
 	k.Keeper.SetStoredGame(ctx, storedGame)
+	k.Keeper.SetNextGame(ctx, nextGame)
 
 	ctx.EventManager().EmitEvent(
 		sdk.NewEvent(sdk.EventTypeMessage,

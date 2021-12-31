@@ -20,11 +20,13 @@ func (k msgServer) CreateGame(goCtx context.Context, msg *types.MsgCreateGame) (
 	newIndex := strconv.FormatUint(nextGame.IdValue, 10)
 
 	storedGame := types.StoredGame{
-		Creator: msg.Creator,
-		Index:   newIndex,
-		Game:    rules.New().String(),
-		Red:     msg.Red,
-		Black:   msg.Black,
+		Creator:   msg.Creator,
+		Index:     newIndex,
+		Game:      rules.New().String(),
+		Red:       msg.Red,
+		Black:     msg.Black,
+		MoveCount: 0,
+		Deadline:  types.FormatDeadline(types.GetNextDeadline(ctx)),
 	}
 
 	err := storedGame.Validate()
@@ -32,7 +34,7 @@ func (k msgServer) CreateGame(goCtx context.Context, msg *types.MsgCreateGame) (
 	if err != nil {
 		return nil, err
 	}
-
+	k.Keeper.SendToFifoTail(ctx, &storedGame, &nextGame)
 	k.Keeper.SetStoredGame(ctx, storedGame)
 
 	nextGame.IdValue++

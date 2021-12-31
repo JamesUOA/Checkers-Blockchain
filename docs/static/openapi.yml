@@ -12592,6 +12592,10 @@ paths:
                   idValue:
                     type: string
                     format: uint64
+                  fifoHead:
+                    type: string
+                  fifoTail:
+                    type: string
         default:
           description: An unexpected error response.
           schema:
@@ -12674,6 +12678,15 @@ paths:
                     red:
                       type: string
                     black:
+                      type: string
+                    moveCount:
+                      type: string
+                      format: uint64
+                    beforeId:
+                      type: string
+                    afterId:
+                      type: string
+                    deadline:
                       type: string
               pagination:
                 type: object
@@ -12803,6 +12816,15 @@ paths:
                   red:
                     type: string
                   black:
+                    type: string
+                  moveCount:
+                    type: string
+                    format: uint64
+                  beforeId:
+                    type: string
+                  afterId:
+                    type: string
+                  deadline:
                     type: string
         default:
           description: An unexpected error response.
@@ -20207,6 +20229,10 @@ definitions:
       idValue:
         type: string
         format: uint64
+      fifoHead:
+        type: string
+      fifoTail:
+        type: string
   jamesuoa.checkers.checkers.Params:
     type: object
     description: Params defines the parameters for the module.
@@ -20229,6 +20255,15 @@ definitions:
             red:
               type: string
             black:
+              type: string
+            moveCount:
+              type: string
+              format: uint64
+            beforeId:
+              type: string
+            afterId:
+              type: string
+            deadline:
               type: string
       pagination:
         type: object
@@ -20266,6 +20301,10 @@ definitions:
           idValue:
             type: string
             format: uint64
+          fifoHead:
+            type: string
+          fifoTail:
+            type: string
   jamesuoa.checkers.checkers.QueryGetStoredGameResponse:
     type: object
     properties:
@@ -20283,6 +20322,15 @@ definitions:
           red:
             type: string
           black:
+            type: string
+          moveCount:
+            type: string
+            format: uint64
+          beforeId:
+            type: string
+          afterId:
+            type: string
+          deadline:
             type: string
   jamesuoa.checkers.checkers.QueryParamsResponse:
     type: object
@@ -20305,4 +20353,13 @@ definitions:
       red:
         type: string
       black:
+        type: string
+      moveCount:
+        type: string
+        format: uint64
+      beforeId:
+        type: string
+      afterId:
+        type: string
+      deadline:
         type: string
