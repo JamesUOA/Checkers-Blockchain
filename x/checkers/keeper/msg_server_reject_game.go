@@ -6,6 +6,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	"github.com/jamesuoa/checkers/x/checkers/rules"
 	"github.com/jamesuoa/checkers/x/checkers/types"
 )
 
@@ -16,6 +17,10 @@ func (k msgServer) RejectGame(goCtx context.Context, msg *types.MsgRejectGame) (
 
 	if !found {
 		return nil, sdkerrors.Wrapf(types.ErrGameNotFound, "game not found")
+	}
+
+	if storedGame.Winner != rules.NO_PLAYER.Color {
+		return nil, types.ErrGameFinished
 	}
 
 	if strings.Compare(storedGame.Red, msg.Creator) == 0 {
@@ -39,6 +44,8 @@ func (k msgServer) RejectGame(goCtx context.Context, msg *types.MsgRejectGame) (
 
 	k.Keeper.RemoveStoredGame(ctx, msg.IdValue)
 	k.Keeper.SetNextGame(ctx, nextGame)
+
+	ctx.GasMeter().ConsumeGas(types.RejectGameGas, "Reject game")
 	ctx.EventManager().EmitEvent(
 		sdk.NewEvent(sdk.EventTypeMessage,
 			sdk.NewAttribute(sdk.AttributeKeyModule, "checkers"),

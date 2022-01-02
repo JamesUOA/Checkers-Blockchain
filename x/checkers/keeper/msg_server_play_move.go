@@ -19,6 +19,15 @@ func (k msgServer) PlayMove(goCtx context.Context, msg *types.MsgPlayMove) (*typ
 		return nil, sdkerrors.Wrapf(types.ErrGameNotFound, "game not found %s", msg.IdValue)
 	}
 
+	if storedGame.Winner != rules.NO_PLAYER.Color {
+		return nil, types.ErrGameFinished
+	}
+
+	err := k.Keeper.CollectWager(ctx, &storedGame)
+	if err != nil {
+		return nil, err
+	}
+
 	var player rules.Player
 
 	if strings.Compare(storedGame.Red, msg.Creator) == 0 {
@@ -57,15 +66,25 @@ func (k msgServer) PlayMove(goCtx context.Context, msg *types.MsgPlayMove) (*typ
 	if !found {
 		panic("NextGame not found")
 	}
+
+	if storedGame.Winner == rules.NO_PLAYER.Color {
+		k.Keeper.SendToFifoTail(ctx, &storedGame, &nextGame)
+	} else {
+		k.Keeper.RemoveFromFifo(ctx, &storedGame, &nextGame)
+		k.Keeper.MustPayWinnings(ctx, &storedGame)
+	}
+
 	k.Keeper.SendToFifoTail(ctx, &storedGame, &nextGame)
 
 	storedGame.MoveCount++
+	storedGame.Winner = game.Winner().Color
 	storedGame.Deadline = types.FormatDeadline(types.GetNextDeadline(ctx))
 	storedGame.Game = game.String()
 	storedGame.Turn = game.Turn.Color
 	k.Keeper.SetStoredGame(ctx, storedGame)
 	k.Keeper.SetNextGame(ctx, nextGame)
 
+	ctx.GasMeter().ConsumeGas(types.PlayMoveGas, "Play a move")
 	ctx.EventManager().EmitEvent(
 		sdk.NewEvent(sdk.EventTypeMessage,
 			sdk.NewAttribute(sdk.AttributeKeyModule, "checkers"),
