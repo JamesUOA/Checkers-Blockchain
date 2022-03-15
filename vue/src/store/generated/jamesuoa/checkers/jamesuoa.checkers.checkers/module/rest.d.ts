@@ -34,6 +34,10 @@ export interface CheckersQueryAllStoredGameResponse {
      */
     pagination?: V1Beta1PageResponse;
 }
+export interface CheckersQueryCanPlayMoveResponse {
+    possible?: boolean;
+    reason?: string;
+}
 export interface CheckersQueryGetNextGameResponse {
     NextGame?: CheckersNextGame;
 }
@@ -59,6 +63,9 @@ export interface CheckersStoredGame {
     beforeId?: string;
     afterId?: string;
     deadline?: string;
+    winner?: string;
+    /** @format uint64 */
+    wager?: string;
 }
 export interface ProtobufAny {
     "@type"?: string;
@@ -183,6 +190,15 @@ export declare class HttpClient<SecurityDataType = unknown> {
  * @version version not set
  */
 export declare class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDataType> {
+    /**
+     * No description
+     *
+     * @tags Query
+     * @name QueryCanPlayMove
+     * @summary Queries a list of CanPlayMove items.
+     * @request GET:/jamesuoa/checkers/checkers/can_play_move/{idValue}/{player}/{fromX}/{fromY}/{toX}/{toY}
+     */
+    queryCanPlayMove: (idValue: string, player: string, fromX: string, fromY: string, toX: string, toY: string, params?: RequestParams) => Promise<HttpResponse<CheckersQueryCanPlayMoveResponse, RpcStatus>>;
     /**
      * No description
      *

@@ -140,6 +140,20 @@ export class Api extends HttpClient {
          * No description
          *
          * @tags Query
+         * @name QueryCanPlayMove
+         * @summary Queries a list of CanPlayMove items.
+         * @request GET:/jamesuoa/checkers/checkers/can_play_move/{idValue}/{player}/{fromX}/{fromY}/{toX}/{toY}
+         */
+        this.queryCanPlayMove = (idValue, player, fromX, fromY, toX, toY, params = {}) => this.request({
+            path: `/jamesuoa/checkers/checkers/can_play_move/${idValue}/${player}/${fromX}/${fromY}/${toX}/${toY}`,
+            method: "GET",
+            format: "json",
+            ...params,
+        });
+        /**
+         * No description
+         *
+         * @tags Query
          * @name QueryNextGame
          * @summary Queries a NextGame by index.
          * @request GET:/jamesuoa/checkers/checkers/next_game

@@ -11,6 +11,8 @@ export interface StoredGame {
     beforeId: string;
     afterId: string;
     deadline: string;
+    winner: string;
+    wager: number;
 }
 export declare const StoredGame: {
     encode(message: StoredGame, writer?: Writer): Writer;

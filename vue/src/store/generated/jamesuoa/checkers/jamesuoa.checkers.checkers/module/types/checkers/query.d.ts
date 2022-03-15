@@ -30,6 +30,18 @@ export interface QueryAllStoredGameResponse {
     storedGame: StoredGame[];
     pagination: PageResponse | undefined;
 }
+export interface QueryCanPlayMoveRequest {
+    idValue: string;
+    player: string;
+    fromX: number;
+    fromY: number;
+    toX: number;
+    toY: number;
+}
+export interface QueryCanPlayMoveResponse {
+    possible: boolean;
+    reason: string;
+}
 export declare const QueryParamsRequest: {
     encode(_: QueryParamsRequest, writer?: Writer): Writer;
     decode(input: Reader | Uint8Array, length?: number): QueryParamsRequest;
@@ -86,6 +98,20 @@ export declare const QueryAllStoredGameResponse: {
     toJSON(message: QueryAllStoredGameResponse): unknown;
     fromPartial(object: DeepPartial<QueryAllStoredGameResponse>): QueryAllStoredGameResponse;
 };
+export declare const QueryCanPlayMoveRequest: {
+    encode(message: QueryCanPlayMoveRequest, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): QueryCanPlayMoveRequest;
+    fromJSON(object: any): QueryCanPlayMoveRequest;
+    toJSON(message: QueryCanPlayMoveRequest): unknown;
+    fromPartial(object: DeepPartial<QueryCanPlayMoveRequest>): QueryCanPlayMoveRequest;
+};
+export declare const QueryCanPlayMoveResponse: {
+    encode(message: QueryCanPlayMoveResponse, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): QueryCanPlayMoveResponse;
+    fromJSON(object: any): QueryCanPlayMoveResponse;
+    toJSON(message: QueryCanPlayMoveResponse): unknown;
+    fromPartial(object: DeepPartial<QueryCanPlayMoveResponse>): QueryCanPlayMoveResponse;
+};
 /** Query defines the gRPC querier service. */
 export interface Query {
     /** Parameters queries the parameters of the module. */
@@ -96,6 +122,8 @@ export interface Query {
     StoredGame(request: QueryGetStoredGameRequest): Promise<QueryGetStoredGameResponse>;
     /** Queries a list of StoredGame items. */
     StoredGameAll(request: QueryAllStoredGameRequest): Promise<QueryAllStoredGameResponse>;
+    /** Queries a list of CanPlayMove items. */
+    CanPlayMove(request: QueryCanPlayMoveRequest): Promise<QueryCanPlayMoveResponse>;
 }
 export declare class QueryClientImpl implements Query {
     private readonly rpc;
@@ -104,6 +132,7 @@ export declare class QueryClientImpl implements Query {
     NextGame(request: QueryGetNextGameRequest): Promise<QueryGetNextGameResponse>;
     StoredGame(request: QueryGetStoredGameRequest): Promise<QueryGetStoredGameResponse>;
     StoredGameAll(request: QueryAllStoredGameRequest): Promise<QueryAllStoredGameResponse>;
+    CanPlayMove(request: QueryCanPlayMoveRequest): Promise<QueryCanPlayMoveResponse>;
 }
 interface Rpc {
     request(service: string, method: string, data: Uint8Array): Promise<Uint8Array>;

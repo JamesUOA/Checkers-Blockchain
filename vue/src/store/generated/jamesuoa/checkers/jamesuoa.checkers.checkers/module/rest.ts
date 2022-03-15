@@ -55,6 +55,11 @@ export interface CheckersQueryAllStoredGameResponse {
   pagination?: V1Beta1PageResponse;
 }
 
+export interface CheckersQueryCanPlayMoveResponse {
+  possible?: boolean;
+  reason?: string;
+}
+
 export interface CheckersQueryGetNextGameResponse {
   NextGame?: CheckersNextGame;
 }
@@ -84,6 +89,10 @@ export interface CheckersStoredGame {
   beforeId?: string;
   afterId?: string;
   deadline?: string;
+  winner?: string;
+
+  /** @format uint64 */
+  wager?: string;
 }
 
 export interface ProtobufAny {
@@ -356,6 +365,30 @@ export class HttpClient<SecurityDataType = unknown> {
  * @version version not set
  */
 export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDataType> {
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryCanPlayMove
+   * @summary Queries a list of CanPlayMove items.
+   * @request GET:/jamesuoa/checkers/checkers/can_play_move/{idValue}/{player}/{fromX}/{fromY}/{toX}/{toY}
+   */
+  queryCanPlayMove = (
+    idValue: string,
+    player: string,
+    fromX: string,
+    fromY: string,
+    toX: string,
+    toY: string,
+    params: RequestParams = {},
+  ) =>
+    this.request<CheckersQueryCanPlayMoveResponse, RpcStatus>({
+      path: `/jamesuoa/checkers/checkers/can_play_move/${idValue}/${player}/${fromX}/${fromY}/${toX}/${toY}`,
+      method: "GET",
+      format: "json",
+      ...params,
+    });
+
   /**
    * No description
    *
